@@ -72,7 +72,7 @@ export class AuthService {
 
     const { id } = user;
     const { accessToken, refreshToken } = await this.getTokens({ id, email });
-
+    await this.updateHashRt(user.id, refreshToken);
     delete user.hash;
     delete user.hashRt;
     return { ...user, accessToken, refreshToken };
@@ -115,5 +115,23 @@ export class AuthService {
     }
   }
 
-  async logout() {}
+  async logout(userId: number) {
+    try {
+      await this.prisma.user.updateMany({
+        where: {
+          id: userId,
+          hashRt: {
+            not: null,
+          },
+        },
+        data: {
+          hashRt: null,
+        },
+      });
+      return { success: true };
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException('something went wrong');
+    }
+  }
 }

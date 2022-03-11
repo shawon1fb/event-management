@@ -6,10 +6,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { PassionService } from './passion.service';
 import { CreatePassionDto } from './dto/create-passion.dto';
 import { UpdatePassionDto } from './dto/update-passion.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('passion')
 export class PassionController {
@@ -20,6 +22,7 @@ export class PassionController {
     return this.passionService.create(createPassionDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   findAll() {
     return this.passionService.findAll();

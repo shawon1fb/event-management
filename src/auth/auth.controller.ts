@@ -1,7 +1,17 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login.auth.dto';
+import { JwtAuthGuard } from './guards';
+import { GetUser } from './decorator';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -21,7 +31,8 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  logout() {
-    return this.authService.logout();
+  @UseGuards(JwtAuthGuard)
+  logout(@GetUser() user: User) {
+    return this.authService.logout(user.id);
   }
 }
