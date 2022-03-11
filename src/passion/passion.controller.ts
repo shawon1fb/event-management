@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -7,12 +8,17 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PassionService } from './passion.service';
 import { CreatePassionDto } from './dto/create-passion.dto';
 import { UpdatePassionDto } from './dto/update-passion.dto';
 import { JwtAuthGuard } from '../auth/guards';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Role } from '../auth/enum/role.enum';
+import { Roles } from '../auth/decorator/roles.decorator';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('passion')
 export class PassionController {
   constructor(private readonly passionService: PassionService) {}
@@ -22,7 +28,8 @@ export class PassionController {
     return this.passionService.create(createPassionDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Get()
   findAll() {
     return this.passionService.findAll();
