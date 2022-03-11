@@ -11,7 +11,7 @@ import {
 import { PassionService } from './passion.service';
 import { CreatePassionDto } from './dto/create-passion.dto';
 import { UpdatePassionDto } from './dto/update-passion.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from '../auth/guards';
 
 @Controller('passion')
 export class PassionController {
@@ -22,7 +22,7 @@ export class PassionController {
     return this.passionService.create(createPassionDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.passionService.findAll();

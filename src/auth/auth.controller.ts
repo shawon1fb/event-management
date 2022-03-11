@@ -9,7 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { JwtAuthGuard } from './guards';
+import { JwtAuthGuard, RtGuard } from './guards';
 import { GetUser } from './decorator';
 import { User } from '@prisma/client';
 
@@ -34,5 +34,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   logout(@GetUser() user: User) {
     return this.authService.logout(user.id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh-token')
+  @UseGuards(RtGuard)
+  refreshToken(@GetUser() user: User) {
+    return this.authService.refreshTokens(user);
   }
 }

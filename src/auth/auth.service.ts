@@ -10,7 +10,8 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LoginAuthDto } from './dto/login.auth.dto';
-import { JwtPayload } from './types';
+import { JwtPayload, Token } from './types';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -20,9 +21,7 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
-  async getTokens(
-    payload: JwtPayload,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async getTokens(payload: JwtPayload): Promise<Token> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         expiresIn: '1h',
@@ -71,11 +70,11 @@ export class AuthService {
     }
 
     const { id } = user;
-    const { accessToken, refreshToken } = await this.getTokens({ id, email });
-    await this.updateHashRt(user.id, refreshToken);
+    const token: Token = await this.getTokens({ id, email });
+    await this.updateHashRt(user.id, token.refreshToken);
     delete user.hash;
     delete user.hashRt;
-    return { ...user, accessToken, refreshToken };
+    return { ...user, ...token };
   }
 
   async signUp(dto: CreateAuthDto) {
@@ -128,10 +127,37 @@ export class AuthService {
           hashRt: null,
         },
       });
-      return { success: true };
+      return { success: 'successfully logout' };
     } catch (e) {
       console.log(e);
       throw new BadRequestException('something went wrong');
     }
+  }
+
+  async refreshTokens(user: User): Promise<Token> {
+    try {
+      if (!user || !user.hashRt) throw new ForbiddenException('Access Denied');
+      const tokens = await this.getTokens({ id: user.id, email: user.email });
+      await this.updateRtHash(user.id, tokens.refreshToken);
+      return tokens;
+    } catch (e) {
+      console.log(e);
+      if (e instanceof ForbiddenException) {
+        throw e;
+      }
+      throw new BadRequestException('something went wrong');
+    }
+  }
+
+  async updateRtHash(userId: number, rt: string): Promise<void> {
+    const hash = await argon.hash(rt);
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        hashRt: hash,
+      },
+    });
   }
 }
