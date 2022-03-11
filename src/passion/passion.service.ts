@@ -1,18 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { CreatePassionDto } from './dto/create-passion.dto';
 import { UpdatePassionDto } from './dto/update-passion.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Injectable()
 export class PassionService {
   constructor(private prisma: PrismaService) {}
 
-  create(createPassionDto: CreatePassionDto) {
-    return this.prisma.passion.create({
-      data: {
-        name: createPassionDto.name,
-      },
-    });
+  async create(createPassionDto: CreatePassionDto) {
+    try {
+      return await this.prisma.passion.create({
+        data: {
+          name: createPassionDto.name,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new ForbiddenException('Passion already exists');
+        }
+      }
+      throw new BadRequestException('server error');
+    }
   }
 
   findAll() {
