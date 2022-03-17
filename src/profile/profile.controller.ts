@@ -10,6 +10,7 @@ import {
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Profile } from '@prisma/client';
 
 @Controller('profile')
 export class ProfileController {
@@ -20,8 +21,8 @@ export class ProfileController {
     return this.profileService.create(createProfileDto);
   }
 
-  @Get()
-  findAll() {
+  @Get('all')
+  findAll(): Promise<Profile[]> {
     return this.profileService.findAll();
   }
 
