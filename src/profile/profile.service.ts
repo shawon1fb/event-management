@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -14,30 +18,37 @@ export class ProfileService {
 
   async findAll(): Promise<Profile[]> {
     try {
-      let profiles = await this.prisma.profile.findMany({
+      return await this.prisma.profile.findMany({
         include: {
-          user: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
         },
       });
-
-      profiles = profiles.map((profile) => {
-        delete profile.user.role;
-        delete profile.user.hashRt;
-        delete profile.user.updatedAt;
-        delete profile.user.createdAt;
-        delete profile.user.id;
-        delete profile.user.hash;
-        return profile;
-      });
-
-      return profiles;
     } catch (error) {
       throw new BadRequestException();
     }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} profile`;
+    try {
+      return this.prisma.profile.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
   update(id: number, updateProfileDto: UpdateProfileDto) {
