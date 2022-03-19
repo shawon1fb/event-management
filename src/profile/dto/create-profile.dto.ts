@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateProfileDto {
   @IsString()
@@ -17,5 +17,14 @@ export class CreateProfileDto {
   gender: string;
   @IsString()
   city: string;
-  passion: string[];
+
+  // @IsOptional()
+  // @Type(() => Number)
+  // @IsNumber({}, { each: true })
+  // passion: string[];
+
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @ArrayMinSize(1)
+  passion: number[];
 }

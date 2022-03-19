@@ -3,6 +3,7 @@ import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from '@prisma/client';
+import { FormDataRequest } from 'nestjs-form-data';
 
 @Controller('profile')
 export class ProfileController {
@@ -24,6 +25,7 @@ export class ProfileController {
   }
 
   @Post('update/:id')
+  @FormDataRequest()
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     console.log(updateProfileDto);
     return updateProfileDto;
