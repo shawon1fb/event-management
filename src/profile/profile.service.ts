@@ -51,8 +51,41 @@ export class ProfileService {
     }
   }
 
-  update(id: number, updateProfileDto: UpdateProfileDto) {
-    return `This action updates a #${id} profile`;
+  async update(id: number, updateProfileDto: UpdateProfileDto) {
+    try {
+      const userTestStatus: { id: number }[] = [
+        ...updateProfileDto.passion.map((v) => ({ id: v })),
+      ];
+
+      return this.prisma.profile.update({
+        where: {
+          id,
+        },
+        data: {
+          bio: updateProfileDto.bio,
+          firstname: updateProfileDto.firstname,
+          lastname: updateProfileDto.lastname,
+          username: updateProfileDto.username,
+          job_title: updateProfileDto.job_title,
+          school: updateProfileDto.school,
+          gender: updateProfileDto.gender,
+          city: updateProfileDto.city,
+          passion: {
+            connect: userTestStatus,
+          },
+        },
+
+        include: {
+          passion: true,
+        },
+      });
+    } catch (e) {
+      if (e.message === 'No data returned from the query.') {
+        throw new NotFoundException();
+      }
+
+      throw new BadRequestException();
+    }
   }
 
   remove(id: number) {

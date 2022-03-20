@@ -23,7 +23,7 @@ model Event {
 model Passion {
   id      Int       @id @default(autoincrement())
   name    String?   @unique
-  profile Profile[]
+  profile Profile[] @relation( references: [id])
 }
 
 model Profile {
@@ -40,7 +40,7 @@ model Profile {
   school    String?
   gender    String?
   city      String?
-  passion   Passion[] @relation(references: [id])
+  passion   Passion[]  @relation(references: [id])
 }
 
 model User {

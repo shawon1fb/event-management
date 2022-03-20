@@ -28,8 +28,8 @@ export class ProfileController {
   @FormDataRequest()
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     console.log(updateProfileDto);
-    return updateProfileDto;
-    // return this.profileService.update(+id, updateProfileDto);
+    //   return updateProfileDto;
+    return this.profileService.update(+id, updateProfileDto);
   }
 
   @Delete(':id')

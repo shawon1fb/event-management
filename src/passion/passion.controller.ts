@@ -29,7 +29,7 @@ export class PassionController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.user)
   @Get()
   findAll() {
     return this.passionService.findAll();
