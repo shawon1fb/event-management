@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Profile } from '@prisma/client';
@@ -11,10 +10,6 @@ import { Profile } from '@prisma/client';
 @Injectable()
 export class ProfileService {
   constructor(private prisma: PrismaService) {}
-
-  create(createProfileDto: CreateProfileDto) {
-    return 'This action adds a new profile';
-  }
 
   async findAll(): Promise<Profile[]> {
     try {
@@ -86,9 +81,5 @@ export class ProfileService {
 
       throw new BadRequestException();
     }
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} profile`;
   }
 }
