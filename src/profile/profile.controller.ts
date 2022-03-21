@@ -24,7 +24,6 @@ export class ProfileController {
   @UseGuards(JwtAuthGuard)
   @FormDataRequest()
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    // console.log(updateProfileDto.avatars?.length);
     return this.profileService.update(+id, updateProfileDto);
   }
 }
