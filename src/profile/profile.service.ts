@@ -48,9 +48,22 @@ export class ProfileService {
 
   async update(id: number, updateProfileDto: UpdateProfileDto) {
     try {
-      const userTestStatus: { id: number }[] = [
-        ...updateProfileDto.passion.map((v) => ({ id: v })),
-      ];
+      let passion: { id: number }[] = [];
+      let avatars: {
+        url: string;
+        position: number;
+      }[] = [];
+
+      if (updateProfileDto.passion !== undefined) {
+        passion = updateProfileDto.passion.map((v) => ({ id: v }));
+      }
+
+      if (updateProfileDto.avatars !== undefined) {
+        avatars = updateProfileDto.avatars.map((v) => ({
+          url: v.originalName,
+          position: 0,
+        }));
+      }
 
       return this.prisma.profile.update({
         where: {
@@ -65,20 +78,24 @@ export class ProfileService {
           school: updateProfileDto.school,
           gender: updateProfileDto.gender,
           city: updateProfileDto.city,
+          avaters: {
+            create: avatars,
+          },
           passion: {
-            connect: userTestStatus,
+            connect: passion,
           },
         },
 
         include: {
           passion: true,
+          avaters: true,
         },
       });
     } catch (e) {
+      console.log(e);
       if (e.message === 'No data returned from the query.') {
         throw new NotFoundException();
       }
-
       throw new BadRequestException();
     }
   }

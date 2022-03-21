@@ -36,7 +36,7 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (user.hashRt === null) {
       throw new UnauthorizedException('unauthorized');
     }
-    console.log(user);
+    // console.log(user);
     return user;
   }
 }

@@ -1,4 +1,10 @@
 import { ArrayMinSize, IsArray, IsNumber, IsString } from 'class-validator';
+import {
+  FileSystemStoredFile,
+  HasMimeType,
+  IsFiles,
+  MaxFileSize,
+} from 'nestjs-form-data';
 
 export class CreateProfileDto {
   @IsString()
@@ -27,4 +33,9 @@ export class CreateProfileDto {
   @IsNumber({}, { each: true })
   @ArrayMinSize(1)
   passion: number[];
+
+  @IsFiles()
+  @MaxFileSize(1e6, { each: true })
+  @HasMimeType(['image/jpeg', 'image/png'], { each: true })
+  avatars: FileSystemStoredFile[];
 }
