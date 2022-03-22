@@ -21,6 +21,7 @@ import * as redisStore from 'cache-manager-redis-store';
     PrismaModule,
     PassionModule,
     CacheModule.registerAsync<RedisClientOptions>({
+      isGlobal: true,
       useFactory: () => ({
         store: redisStore,
         ttl: process.env.CACHE_TTL,
