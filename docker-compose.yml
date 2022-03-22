@@ -10,15 +10,24 @@ services:
       POSTGRES_DB: events_manager
     networks:
       - freecodecamp
-  test-db:
-    image: postgres:13
+  redis:
+    image: redis:6.2.6
     ports:
-      - 5435:5432
+      - '8091:6379'
+    command: redis-server --requirepass eChTelptB2spNWp92Pv_U2FJd8tT9jQg
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
-    networks:
-      - freecodecamp
+      - REDIS_REPLICATION_MODE=master
+
+
+#  test-db:
+#    image: postgres:13
+#    ports:
+#      - 5435:5432
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: 123
+#      POSTGRES_DB: nest
+#    networks:
+#      - freecodecamp
 networks:
   freecodecamp:

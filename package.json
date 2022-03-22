@@ -7,8 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "prisma:dev:deploy": "prisma migrate deploy",
-    "db:dev:rm": "docker compose rm dev-db -s -f -v",
-    "db:dev:up": "docker compose up dev-db -d",
+    "db:dev:rm": "docker compose rm dev-db -s -f -v && docker compose rm redis -s -f -v",
+    "db:dev:up": "docker compose up dev-db -d && docker compose up redis -d",
     "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 1 && npm run prisma:dev:deploy",
     "prisma:test:deploy": "dotenv -e .env.test -- prisma migrate deploy",
     "db:test:rm": "docker compose rm test-db -s -f -v",
@@ -38,6 +38,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@prisma/client": "^3.10.0",
     "argon2": "^0.28.5",
+    "cache-manager-redis-store": "^2.0.0",
     "nestjs-form-data": "^1.6.1",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
