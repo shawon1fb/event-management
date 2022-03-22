@@ -20,15 +20,13 @@ import * as redisStore from 'cache-manager-redis-store';
     EventsModule,
     PrismaModule,
     PassionModule,
-    CacheModule.registerAsync<RedisClientOptions>({
+    CacheModule.register<RedisClientOptions>({
       isGlobal: true,
-      useFactory: () => ({
-        store: redisStore,
-        ttl: process.env.CACHE_TTL,
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
-        // password: process.env.REDIS_PASSWORD,
-      }),
+      store: redisStore,
+      ttl: process.env.CACHE_TTL,
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
     }),
   ],
   controllers: [AppController],
