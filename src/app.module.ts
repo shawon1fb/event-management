@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassionModule } from './passion/passion.module';
 import type { RedisClientOptions } from 'redis';
 import * as redisStore from 'cache-manager-redis-store';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import * as redisStore from 'cache-manager-redis-store';
     EventsModule,
     PrismaModule,
     PassionModule,
+    HttpModule,
     CacheModule.register<RedisClientOptions>({
       isGlobal: true,
       store: redisStore,

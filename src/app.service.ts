@@ -1,6 +1,7 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Store } from 'cache-manager';
 import Redis from 'redis';
+import { HttpService } from '@nestjs/axios';
 
 interface RedisCache extends Cache {
   store: RedisStore;
@@ -12,15 +13,26 @@ interface RedisStore extends Store {
   isCacheableValue: (value: any) => boolean;
 }
 
+class AxiosResponse<T> {}
+
 @Injectable()
 export class AppService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: RedisCache) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: RedisCache,
+    private httpService: HttpService,
+  ) {}
 
-  async getHello(): Promise<string> {
-    await this.cacheManager.store.set('foo', 'bar');
+  async getHello(): Promise<any> {
+    /// image links
+    const t = this.httpService.get<string>(
+      'https://rest.entitysport.com/v2/matches/49689/live?token=ec471071441bb2ac538a0ff901abd249',
+    );
 
-    const value = await this.cacheManager.store.get('foo');
-    console.log(value);
-    return 'Hello World!';
+    console.log(await t.toPromise());
+    const s = await t.toPromise();
+
+    return s.data;
+
+    //    return 'Hello World!';
   }
 }
