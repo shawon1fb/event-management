@@ -1,4 +1,4 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -8,9 +8,8 @@ import { EventsModule } from './events/events.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassionModule } from './passion/passion.module';
-import type { RedisClientOptions } from 'redis';
-import * as redisStore from 'cache-manager-redis-store';
 import { HttpModule } from '@nestjs/axios';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -22,14 +21,7 @@ import { HttpModule } from '@nestjs/axios';
     PrismaModule,
     PassionModule,
     HttpModule,
-    CacheModule.register<RedisClientOptions>({
-      isGlobal: true,
-      store: redisStore,
-      ttl: process.env.CACHE_TTL,
-      host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT,
-      password: process.env.REDIS_PASSWORD,
-    }),
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

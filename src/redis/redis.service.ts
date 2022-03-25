@@ -32,8 +32,34 @@ export class RedisService {
     return this.cacheManager.store.del(key);
   }
 
-  // function to check if data exists in redis cache manager
+  // function to check if key exists in redis cache manager
   async has(key: string): Promise<boolean> {
-    return this.cacheManager.store.getClient().exists(key);
+    const keys: string[] = await this.cacheManager.store.keys();
+    return keys.includes(key);
+  }
+
+  // function to clear all redis cache manager
+  async clearAll(): Promise<void> {
+    return this.cacheManager.store.getClient().flushdb();
+  }
+
+  // function to get all keys from redis cache manager
+  async keys(): Promise<string[]> {
+    return this.cacheManager.store.keys();
+  }
+
+  // function to remember data in redis cache manager
+  async remember(
+    key: string,
+    ttl: number,
+    fn: () => Promise<any>,
+  ): Promise<any> {
+    const value = await this.get(key);
+    if (value) {
+      return value;
+    }
+    const result = await fn();
+    await this.set(key, result, ttl);
+    return result;
   }
 }

@@ -3,10 +3,14 @@ import { CreatePassionDto } from './dto/create-passion.dto';
 import { UpdatePassionDto } from './dto/update-passion.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class PassionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private redisCache: RedisService,
+  ) {}
 
   async create(createPassionDto: CreatePassionDto) {
     try {
@@ -38,11 +42,24 @@ export class PassionService {
     });
   }
 
-  update(id: number, updatePassionDto: UpdatePassionDto) {
-    return `This action updates a #${id} passion`;
+  async update(id: number, updatePassionDto: UpdatePassionDto) {
+    const s = await this.redisCache.get('passion');
+    const a = await this.redisCache.has('passion');
+    // await this.redisCache.clear();
+    const t = await this.redisCache.values();
+    return `This action updates a #${id} passion ${s} \n${t.length}`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} passion`;
+  async remove(id: number) {
+    await this.redisCache.set(
+      'passion' + id.toString(),
+      'passion ' + id.toString(),
+    );
+
+    const s = await this.redisCache.get('passion');
+    // await this.redisCache.clear();
+    const b = await this.redisCache.has('passion');
+    console.log(s);
+    return `This action removes a #${id} passion ${s} ${b} `;
   }
 }

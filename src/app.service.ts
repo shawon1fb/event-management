@@ -1,24 +1,9 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
-import { Store } from 'cache-manager';
-import Redis from 'redis';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-
-interface RedisCache extends Cache {
-  store: RedisStore;
-}
-
-interface RedisStore extends Store {
-  name: 'redis';
-  getClient: () => Redis.RedisClient;
-  isCacheableValue: (value: any) => boolean;
-}
 
 @Injectable()
 export class AppService {
-  constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: RedisCache,
-    private httpService: HttpService,
-  ) {}
+  constructor(private httpService: HttpService) {}
 
   async getHello(): Promise<any> {
     /// image links
