@@ -62,4 +62,31 @@ export class RedisService {
     await this.set(key, result, ttl);
     return result;
   }
+
+  // function to remember forever data in redis cache manager
+  async rememberForever(key: string, fn: () => Promise<any>): Promise<any> {
+    return this.remember(key, 0, fn);
+  }
+
+  // function to pull data in redis cache manager
+  async pull(key: string): Promise<any> {
+    const value = await this.get(key);
+    if (value) {
+      await this.del(key);
+    }
+    return value;
+  }
+
+  // function to add data if not exist in redis cache manager
+  async add(key: string, value: any, ttl?: number): Promise<void> {
+    if (await this.has(key)) {
+      throw new Error('Key already exists');
+    }
+    return this.set(key, value, ttl);
+  }
+
+  // function to store an item in the cache permanently
+  async forever(key: string, value: any): Promise<void> {
+    return this.add(key, value, 0);
+  }
 }
