@@ -40,7 +40,7 @@ export class RedisService {
 
   // function to clear all redis cache manager
   async clearAll(): Promise<void> {
-    return this.cacheManager.store.getClient().flushdb();
+    return this.cacheManager.store.reset();
   }
 
   // function to get all keys from redis cache manager

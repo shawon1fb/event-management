@@ -46,8 +46,7 @@ export class PassionService {
     const s = await this.redisCache.get('passion');
     const a = await this.redisCache.has('passion');
     // await this.redisCache.clear();
-    const t = await this.redisCache.values();
-    return `This action updates a #${id} passion ${s} \n${t.length}`;
+    return `This action updates a #${id} passion ${s} `;
   }
 
   async remove(id: number) {
