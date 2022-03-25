@@ -13,8 +13,6 @@ interface RedisStore extends Store {
   isCacheableValue: (value: any) => boolean;
 }
 
-class AxiosResponse<T> {}
-
 @Injectable()
 export class AppService {
   constructor(
@@ -28,7 +26,7 @@ export class AppService {
       'https://rest.entitysport.com/v2/matches/49689/live?token=ec471071441bb2ac538a0ff901abd249',
     );
 
-    console.log(await t.toPromise());
+    //console.log(await t.toPromise());
     const s = await t.toPromise();
 
     return s.data;
