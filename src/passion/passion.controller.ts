@@ -40,11 +40,13 @@ export class PassionController {
     return this.passionService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePassionDto: UpdatePassionDto) {
     return this.passionService.update(+id, updatePassionDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.passionService.remove(+id);

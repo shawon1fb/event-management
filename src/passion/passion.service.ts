@@ -43,10 +43,23 @@ export class PassionService {
   }
 
   async update(id: number, updatePassionDto: UpdatePassionDto) {
-    const s = await this.redisCache.get('passion');
-    const a = await this.redisCache.has('passion');
-    // await this.redisCache.clear();
-    return `This action updates a #${id} passion ${s} `;
+    try {
+      return await this.prisma.passion.update({
+        where: {
+          id,
+        },
+        data: {
+          name: updatePassionDto.name,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new BadRequestException('Passion already exists');
+        }
+      }
+      throw new BadRequestException('server error');
+    }
   }
 
   async remove(id: number) {
