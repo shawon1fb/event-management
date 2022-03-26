@@ -56,7 +56,7 @@ export class CategoryService {
         }
       }
       if (e instanceof BadRequestException) {
-        throw new BadRequestException(e.message);
+        throw new BadRequestException("can't find category");
       }
       throw new BadRequestException('category not found');
     }
@@ -97,7 +97,7 @@ export class CategoryService {
         if (e.code === 'P2025') {
           throw new BadRequestException('category not found');
         } else {
-          throw new BadRequestException(e.message);
+          throw new BadRequestException("can't delete category");
         }
       }
       throw new BadRequestException("can't delete category");
