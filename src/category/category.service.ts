@@ -29,8 +29,12 @@ export class CategoryService {
     }
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll() {
+    try {
+      return await this.prismaService.category.findMany();
+    } catch (e) {
+      throw new BadRequestException('server error');
+    }
   }
 
   findOne(id: number) {
