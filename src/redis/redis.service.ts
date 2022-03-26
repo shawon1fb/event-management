@@ -89,4 +89,15 @@ export class RedisService {
   async forever(key: string, value: any): Promise<void> {
     return this.add(key, value, 0);
   }
+
+  // function to updateRemember data in redis cache manager
+  async updateRemember(
+    key: string,
+    ttl: number,
+    fn: () => Promise<any>,
+  ): Promise<any> {
+    const result = await fn();
+    await this.set(key, result, ttl);
+    return result;
+  }
 }
