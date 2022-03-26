@@ -24,24 +24,25 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
   async validate(payload: JwtPayload): Promise<User> {
     const { email } = payload;
 
-    // const user: User = await this.prisma.user.findUnique({
-    //   where: { email },
-    //   include: {
-    //     profile: true,
-    //   },
-    // });
+    const user: User = await this.prisma.user.findUnique({
+      where: { email },
+      include: {
+        profile: true,
+      },
+    });
 
-    const user: User = await this.cacheService.remember(
-      `auth_user_${email}`,
-      3600,
-      () =>
-        this.prisma.user.findUnique({
-          where: { email },
-          include: {
-            profile: true,
-          },
-        }),
-    );
+    ///todo: update needed from logout
+    // const user: User = await this.cacheService.remember(
+    //   `auth_user_${email}`,
+    //   3600,
+    //   () =>
+    //     this.prisma.user.findUnique({
+    //       where: { email },
+    //       include: {
+    //         profile: true,
+    //       },
+    //     }),
+    // );
 
     if (!user) {
       throw new UnauthorizedException('unauthorized');
