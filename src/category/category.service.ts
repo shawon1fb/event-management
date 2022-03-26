@@ -63,7 +63,25 @@ export class CategoryService {
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+    try {
+      return this.prismaService.category.update({
+        where: {
+          id,
+        },
+        data: {
+          name: updateCategoryDto.name,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.message === 'P2025') {
+          throw new BadRequestException('category not found');
+        } else {
+          throw new BadRequestException(e.message);
+        }
+      }
+      throw new BadRequestException('server error');
+    }
   }
 
   remove(id: number) {
