@@ -50,15 +50,19 @@ export class PassionService {
   }
 
   async remove(id: number) {
-    await this.redisCache.set(
-      'passion' + id.toString(),
-      'passion ' + id.toString(),
-    );
-
-    const s = await this.redisCache.get('passion');
-    // await this.redisCache.clear();
-    const b = await this.redisCache.has('passion');
-    console.log(s);
-    return `This action removes a #${id} passion ${s} ${b} `;
+    try {
+      return await this.prisma.passion.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new BadRequestException('Passion already exists');
+        }
+      }
+      throw new BadRequestException('server error');
+    }
   }
 }
