@@ -14,27 +14,26 @@ import { PassionService } from './passion.service';
 import { CreatePassionDto } from './dto/create-passion.dto';
 import { UpdatePassionDto } from './dto/update-passion.dto';
 import { JwtAuthGuard } from '../auth/guards';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Role } from '../auth/enum/role.enum';
-import { Roles } from '../auth/decorator/roles.decorator';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('passion')
 export class PassionController {
   constructor(private readonly passionService: PassionService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createPassionDto: CreatePassionDto) {
     return this.passionService.create(createPassionDto);
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.user)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.user)
   @Get()
   findAll() {
     return this.passionService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.passionService.findOne(+id);
