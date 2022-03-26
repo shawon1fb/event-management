@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassionModule } from './passion/passion.module';
 import { HttpModule } from '@nestjs/axios';
 import { RedisModule } from './redis/redis.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RedisModule } from './redis/redis.module';
     PassionModule,
     HttpModule,
     RedisModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
