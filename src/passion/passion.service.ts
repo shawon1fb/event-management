@@ -4,6 +4,7 @@ import { UpdatePassionDto } from './dto/update-passion.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { RedisService } from '../redis/redis.service';
+import { Passion } from './entities/passion.entity';
 
 @Injectable()
 export class PassionService {
@@ -34,12 +35,33 @@ export class PassionService {
     return this.prisma.passion.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.passion.findFirst({
-      where: {
-        id,
-      },
-    });
+  async findOne(id: number): Promise<Passion> {
+    try {
+      console.log('----------find one-------');
+      const passion = await this.prisma.passion.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!passion) {
+        throw new BadRequestException('passion not found');
+      }
+      return passion;
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        console.log('-----------------');
+        console.log(e.code);
+        if (e.code === 'P2025') {
+          throw new BadRequestException('Passion not found');
+        }
+      }
+
+      if (e instanceof BadRequestException) {
+        throw e;
+      }
+
+      throw new BadRequestException('server error');
+    }
   }
 
   async update(id: number, updatePassionDto: UpdatePassionDto) {
