@@ -5,6 +5,7 @@ import {
   IsFiles,
   MaxFileSize,
 } from 'nestjs-form-data';
+import { Type } from 'class-transformer';
 
 export class CreateProfileDto {
   @IsString()
@@ -30,6 +31,7 @@ export class CreateProfileDto {
   // passion: string[];
 
   @IsArray()
+  @Type(() => Number)
   @IsNumber({}, { each: true })
   @ArrayMinSize(1)
   passion: number[];
