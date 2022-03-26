@@ -1,11 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { Category } from '@prisma/client';
 
 @Injectable()
 export class CategoryService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  constructor(private prismaService: PrismaService) {}
+
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    try {
+      console.log(createCategoryDto);
+      return await this.prismaService.category.create({
+        data: {
+          name: createCategoryDto.name,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new BadRequestException('category already exists');
+        } else {
+          throw new BadRequestException(e.message);
+        }
+      }
+      throw new BadRequestException('server error');
+    }
   }
 
   findAll() {
