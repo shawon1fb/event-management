@@ -37,7 +37,6 @@ export class PassionService {
 
   async findOne(id: number): Promise<Passion> {
     try {
-      console.log('----------find one-------');
       const passion = await this.prisma.passion.findUnique({
         where: {
           id: id,
@@ -49,8 +48,6 @@ export class PassionService {
       return passion;
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
-        console.log('-----------------');
-        console.log(e.code);
         if (e.code === 'P2025') {
           throw new BadRequestException('Passion not found');
         }
@@ -76,8 +73,6 @@ export class PassionService {
       });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
-        console.log('-----------------');
-        console.log(e.code);
         if (e.code === 'P2025') {
           throw new BadRequestException('Passion not found');
         }
