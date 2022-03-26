@@ -22,10 +22,10 @@ export class CategoryService {
         if (e.code === 'P2002') {
           throw new BadRequestException('category already exists');
         } else {
-          throw new BadRequestException(e.message);
+          throw new BadRequestException("can't create category");
         }
       }
-      throw new BadRequestException('server error');
+      throw new BadRequestException('category creation failed');
     }
   }
 
@@ -33,7 +33,7 @@ export class CategoryService {
     try {
       return await this.prismaService.category.findMany();
     } catch (e) {
-      throw new BadRequestException('server error');
+      throw new BadRequestException("category's not found");
     }
   }
 
@@ -52,19 +52,19 @@ export class CategoryService {
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
         if (e.code === 'P2025') {
-          throw new BadRequestException('Passion not found');
+          throw new BadRequestException('category not exists');
         }
       }
       if (e instanceof BadRequestException) {
         throw new BadRequestException(e.message);
       }
-      throw new BadRequestException('server error');
+      throw new BadRequestException('category not found');
     }
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     try {
-      return this.prismaService.category.update({
+      return await this.prismaService.category.update({
         where: {
           id,
         },
@@ -74,17 +74,33 @@ export class CategoryService {
       });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
-        if (e.message === 'P2025') {
+        if (e.code === 'P2025') {
+          throw new BadRequestException('category not exists');
+        } else {
+          throw new BadRequestException("can't update category");
+        }
+      }
+      throw new BadRequestException("can't update category");
+    }
+  }
+
+  async remove(id: number) {
+    try {
+      return await this.prismaService.category.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        console.log(e.code);
+        if (e.code === 'P2025') {
           throw new BadRequestException('category not found');
         } else {
           throw new BadRequestException(e.message);
         }
       }
-      throw new BadRequestException('server error');
+      throw new BadRequestException("can't delete category");
     }
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} category`;
   }
 }
