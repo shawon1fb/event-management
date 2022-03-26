@@ -4,7 +4,7 @@ import { UpdatePassionDto } from './dto/update-passion.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { RedisService } from '../redis/redis.service';
-import { Passion } from './entities/passion.entity';
+import { Passion } from '@prisma/client';
 
 @Injectable()
 export class PassionService {
