@@ -6,10 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { GetUser } from '../auth/decorator';
+import { User } from '@prisma/client';
+import { JwtAuthGuard } from '../auth/guards';
 
 @Controller('user')
 export class UserController {
@@ -35,8 +39,10 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete('')
+  remove(@GetUser() user: User) {
+    console.log(user);
+    return this.userService.remove(+user.id);
   }
 }
