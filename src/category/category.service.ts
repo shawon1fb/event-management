@@ -37,8 +37,29 @@ export class CategoryService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: number): Promise<Category> {
+    try {
+      const category = await this.prismaService.category.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!category) {
+        throw new BadRequestException('category not found');
+      }
+      return category;
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          throw new BadRequestException('Passion not found');
+        }
+      }
+      if (e instanceof BadRequestException) {
+        throw new BadRequestException(e.message);
+      }
+      throw new BadRequestException('server error');
+    }
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
