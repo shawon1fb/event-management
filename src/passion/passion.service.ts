@@ -54,8 +54,10 @@ export class PassionService {
       });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError) {
-        if (e.code === 'P2002') {
-          throw new BadRequestException('Passion already exists');
+        console.log('-----------------');
+        console.log(e.code);
+        if (e.code === 'P2025') {
+          throw new BadRequestException('Passion not found');
         }
       }
       throw new BadRequestException('server error');
