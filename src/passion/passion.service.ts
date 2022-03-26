@@ -60,6 +60,8 @@ export class PassionService {
       if (e instanceof PrismaClientKnownRequestError) {
         if (e.code === 'P2002') {
           throw new BadRequestException('Passion already exists');
+        } else if (e.code === 'P2025') {
+          throw new BadRequestException('Passion does not exist');
         }
       }
       throw new BadRequestException('server error');
