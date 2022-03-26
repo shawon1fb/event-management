@@ -41,6 +41,7 @@
     "argon2": "^0.28.5",
     "cache-manager": "^3.6.0",
     "cache-manager-redis-store": "^2.0.0",
+    "compression": "^1.7.4",
     "nestjs-form-data": "^1.6.1",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
