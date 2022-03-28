@@ -15,6 +15,20 @@ export class PrismaService
         },
       },
     });
+
+    this.$use(async (params, next) => {
+      // Manipulate params here
+      const before = Date.now();
+      const result = await next(params);
+      // See results here
+
+      const after = Date.now();
+
+      console.log(
+        `Query ${params.model}.${params.action} took ${after - before}ms `,
+      );
+      return result;
+    });
   }
 
   onModuleDestroy(): any {
