@@ -32,6 +32,7 @@ model Event {
   title         String   @db.VarChar(255)
   description   String?
   status        String?
+  city          String?
 
   category      Category @relation(fields: [categoryId], references: [id])
   categoryId    Int
