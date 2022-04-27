@@ -34,6 +34,7 @@ model Event {
   status        String?
   city          String?
 
+
   category      Category @relation(fields: [categoryId], references: [id])
   categoryId    Int
 }
