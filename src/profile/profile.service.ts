@@ -20,6 +20,7 @@ export class ProfileService {
               email: true,
             },
           },
+          avaters: true,
         },
       });
     } catch (error) {
@@ -39,6 +40,7 @@ export class ProfileService {
               email: true,
             },
           },
+          avaters: true,
         },
       });
     } catch (error) {

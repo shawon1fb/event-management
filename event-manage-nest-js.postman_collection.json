@@ -1,0 +1,622 @@
+{
+	"info": {
+		"_postman_id": "5f890651-064f-499c-aeb9-5309820646f6",
+		"name": "event-manage-nest-js",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "otp",
+			"item": [
+				{
+					"name": "otp create",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"otp"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"email1@gmail.com\",\n    \"password\": \"1234\",\n    \"username\": \"shawon\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/auth/signup",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code==200){",
+									"    pm.collectionVariables.set('token', pm.response.json().accessToken);",
+									"",
+									"    pm.collectionVariables.set('refreshToken', pm.response.json().refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "email1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/auth/signin",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/auth/logout",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code==200){",
+									"    pm.collectionVariables.set('token', pm.response.json().accessToken);",
+									"",
+									"    pm.collectionVariables.set('refreshToken', pm.response.json().refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{refreshToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/auth/refresh-token",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/user",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "passion",
+			"item": [
+				{
+					"name": "finall all passion",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/passion",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"passion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create passion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Music2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/passion",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"passion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update passion by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "dance",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/passion/4",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"passion",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete passion by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/passion/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"passion",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find passion by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/passion/4",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"passion",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "profile",
+			"item": [
+				{
+					"name": "profile-all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/profile/all",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"profile",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/profile/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatars[]",
+									"type": "file",
+									"src": [
+										"/Users/shahanul/Downloads/party.jpeg",
+										"/Users/shahanul/Downloads/sunny_20200420.jpeg"
+									]
+								},
+								{
+									"key": "passion",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "passion",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "dhaka",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/profile/update/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"profile",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "create category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "dhaka1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/category",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "all category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/category",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find category by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/category/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "kustia",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/category/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/category/5",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"category",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "http_check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000?page=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "name",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "description",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{local}}/orders",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "local",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
