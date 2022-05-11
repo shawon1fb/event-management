@@ -21,6 +21,7 @@ export class ProfileService {
             },
           },
           avaters: true,
+          passion: true,
         },
       });
     } catch (error) {
@@ -41,6 +42,7 @@ export class ProfileService {
             },
           },
           avaters: true,
+          passion: true,
         },
       });
     } catch (error) {
@@ -91,6 +93,11 @@ export class ProfileService {
         include: {
           passion: true,
           avaters: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
         },
       });
     } catch (e) {
